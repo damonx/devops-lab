@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cron-job
+spec: # CrongJob
+  schedule: "* * * * *" # every minute
+  jobTemplate:
+    spec: # JobTemplateSpec
+      template: # PodTemplateSpec
+        spec: # PodSpec
+          containers:
+          - name: cron-job
+            image: python:rc-slim
+            command: ["python"]
+            args: ["-c", "import time; print('hello from cron job'); time.sleep(30); print('done')"]
+          restartPolicy: Never
+      backoffLimit: 2
+
+
+
+
+

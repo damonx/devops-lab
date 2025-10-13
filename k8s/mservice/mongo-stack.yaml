@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+spec:
+  selector:
+    matchLabels:
+      damonxApp: mongodb
+  replicas: 1
+  template:  # templat for pods
+    metadata:
+      labels:
+        damonxApp: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:3.6.5-jessie
+        volumeMounts:
+          - name: mongo-persistent-storage
+            mountPath: /data/db
+        resources:
+          requests:
+            memory: 200Mi
+            cpu: 200m
+      volumes:
+        - name: mongo-persistent-storage
+          # pointer to the conf of HOW we want the mont to be implemented.
+          persistentVolumeClaim:
+            claimName: mongo-pvc
+          # hostPath:
+          #   path: /mnt/mongo/data
+          #   type: DirectoryOrCreate
+
+---    
+kind: Service
+apiVersion: v1
+metadata:
+  name: fleetman-mongodb
+spec:
+  #Defines which pods are going to be reprensented by this service.
+  selector: 
+    damonxApp: mongodb
+  ports:
+    - name: mongoport
+      port: 27017
+
+  type: ClusterIP

@@ -1,0 +1,127 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: queue
+spec:
+  selector:
+    matchLabels:
+      damonxApp: queue
+  replicas: 1
+  template:  # templat for pods
+    metadata:
+      labels:
+        damonxApp: queue
+    spec:
+      containers:
+      - name: queue
+        image: richardchesterwood/k8s-fleetman-queue:resources
+        resources:
+          requests:
+            memory: 300Mi
+            cpu: 100m
+          limits:
+            memory: 300Mi
+            cpu: 100m
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: position-simulator
+spec:
+  selector:
+    matchLabels:
+      damonxApp: position-simulator
+  replicas: 1
+  template:  # templat for pods
+    metadata:
+      labels:
+        damonxApp: position-simulator
+    spec:
+      containers:
+      - name: position-simulator
+        image: richardchesterwood/k8s-fleetman-position-simulator:resources
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production-microservice
+        volumeMounts:
+        - name: database-config-volumn
+          mountPath: /etc/any/directory/config
+      volumes: 
+      - name: database-config-volumn
+        configMap:
+          name: global-database-config-v4
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: position-tracker
+spec:
+  selector:
+    matchLabels:
+      damonxApp: position-tracker
+  replicas: 1
+  template:  # templat for pods
+    metadata:
+      labels:
+        damonxApp: position-tracker
+    spec:
+      containers:
+      - name: position-tracker
+        image: richardchesterwood/k8s-fleetman-position-tracker:resources
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production-microservice
+        resources:
+          requests:
+            memory: 200Mi
+            cpu: 50m
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+spec:
+  selector:
+    matchLabels:
+      damonxApp: api-gateway
+  replicas: 3
+  template:  # templat for pods
+    metadata:
+      labels:
+        damonxApp: api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: richardchesterwood/k8s-fleetman-api-gateway:performance
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production-microservice
+        resources:
+          requests:
+            memory: 200Mi
+            cpu: 50m
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+spec:
+  selector:
+    matchLabels:
+      damonxApp: webapp
+  replicas: 1
+  template:  # templat for pods
+    metadata:
+      labels:
+        damonxApp: webapp
+    spec:
+      containers:
+      - name: webapp
+        image: richardchesterwood/k8s-fleetman-webapp-angular:release2
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: production-microservice
