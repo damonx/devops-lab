@@ -4,7 +4,7 @@ This repository demonstrates how to use **Terraform** to provision a secure, ver
 
 ---
 
-## 📘 Overview
+## Overview
 
 This Terraform configuration:
 - Creates a **private S3 bucket**
@@ -17,7 +17,7 @@ This Terraform configuration:
 This is a minimal yet production-ready example for learning or bootstrapping AWS infrastructure.
 
 ---
-## 🧩 Project Structure
+## Project Structure
 ```bash
 .
 ├── main.tf                 # Main resources (S3 bucket + access block)
