@@ -217,15 +217,19 @@ helm list
 helm uninstall (when done)
 ```
 
----
+# Helm create charts
+➜ helm create fleetman-helm-chart
+Creating fleetman-helm-chart
 
-## 🧠 Key Concepts Recap
+helmcourse/fleetman/fleetman-helm-chart on  master [?] via ⎈ v3.19.0 
+➜ ll
+total 24
+-rw-r--r--   1 t827056  staff  1155  6 Feb 22:17 Chart.yaml
+drwxr-xr-x   2 t827056  staff    64  6 Feb 22:17 charts
+drwxr-xr-x  11 t827056  staff   352  6 Feb 22:17 templates
+-rw-r--r--   1 t827056  staff  5265  6 Feb 22:17 values.yaml
 
-| Term          | Meaning                               |
-| ------------- | ------------------------------------- |
-| Chart         | A Helm package (templates + defaults) |
-| Release       | A running instance of a chart         |
-| Repo          | Chart registry                        |
-| values.yaml   | Configuration overrides               |
-| helm template | Render-only (no install)              |
+# Overrides the value in template:
+helm template . --set numberOfWebappReplicas=127
+
 
