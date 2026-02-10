@@ -1,5 +1,3 @@
-Helm Cheat Sheet
-
 This document is a practical Helm command reference, covering the most common workflows:
 **repositories → install → inspect → upgrade → template → uninstall**.
 
